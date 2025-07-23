@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Feedback Board</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      background-color: #25282A;
+    }
+
+    .main-container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 30px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #005570, #41788D);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    }
+
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 32px;
+      color: #31BCAB;
+      text-align: center;
+      text-shadow: 0 0 5px #31BCAB;
+      margin-bottom: 30px;
+    }
+
+    .submit-button {
+      background-color: #8CBA06;
+      color: white;
+      padding: 10px 20px;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: bold;
+      display: inline-block;
+      margin-bottom: 30px;
+      transition: background 0.3s;
+    }
+
+    .submit-button:hover {
+      background-color: #77a504;
+    }
+
+    .feedback-box {
+      background-color: #A1ADB4;
+      border: 2px solid #F58220;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .chat-content {
+      max-width: 80%;
+    }
+
+    .feedback-text {
+      font-size: 18px;
+      font-weight: bold;
+      color: #25282A;
+      margin-bottom: 12px;
+    }
+
+    .feedback-name {
+      font-size: 14px;
+      color: #CED5DA;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .feedback-meta {
+      font-size: 12px;
+      color: #CED5DA;
+      margin-bottom: 10px;
+    }
+
+    .status-tag {
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: bold;
+      display: inline-block;
+      margin-top: 10px;
+    }
+
+    .status-new {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .status-pending {
+      background-color: #ffc107;
+      color: #000;
+    }
+
+    .status-done {
+      background-color: #28a745;
+      color: white;
+    }
+
+    .vote-box {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      font-size: 14px;
+      gap: 8px;
+    }
+
+    .vote-buttons {
+      display: flex;
+      gap: 12px;
+    }
+
+    .vote {
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-weight: bold;
+      color: #25282A;
+      border: 1px solid #25282A;
+      background-color: transparent;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+      text-decoration: none;
+    }
+
+    .vote:hover {
+      background-color: #25282A;
+      color: #fff;
+    }
+
+    .vote span {
+      font-weight: normal;
+      margin-left: 4px;
+    }
+
+    .header-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .feedback-label {
+      color: #F58220;
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="main-container">
+    <div class="header-section">
+      <h1>Feedback Board</h1>
+      <a class="submit-button" href="/submit">+ Submit Feedback</a>
+    </div>
+
+    {% for fb in feedback %}
+      <div class="feedback-box">
+        <div class="chat-content">
+          <div class="feedback-text">{{ fb['Content'] }}</div>
+          <div class="feedback-name">{{ fb['Name'] }}</div>
+          <div class="feedback-meta">{{ fb['Timestamp'] }} | {{ fb['Region'] }} | {{ fb['Category'] }}</div>
+          {% set status_class = 
+            'status-new' if fb['Status'] == 'New' else
+            'status-pending' if fb['Status'] == 'Pending' else
+            'status-done'
+          %}
+          <div class="status-tag {{ status_class }}">Status: {{ fb['Status'] }}</div>
+        </div>
+        <div class="vote-box">
+          <div class="vote-buttons">
+            <a href="/upvote/{{ fb['Timestamp'] }}" class="vote">↑ Up<span>{{ fb['Upvotes'] }}</span></a>
+            <a href="/downvote/{{ fb['Timestamp'] }}" class="vote">↓ Down<span>{{ fb['Downvotes'] }}</span></a>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</body>
+</html>
